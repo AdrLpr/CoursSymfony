@@ -1,0 +1,8 @@
+GET http://127.0.0.1:8000/hello/Adrien
+
+
+###
+
+GET http://127.0.0.1:8000/divi/2/3?precision=2
+
+
