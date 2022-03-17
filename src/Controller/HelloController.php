@@ -30,11 +30,12 @@ class HelloController extends AbstractController
         //manager met à jour la base de donnée
         $manager->flush();
 
-        return new Response('le nouveau livre a été crée :'. $book->getTitle());
+        return new Response('le nouveau livre a été crée :' . $book->getTitle());
     }
 
-    #[Route("/hello/{nom}"/* {paramètre dynamique} */ , name : 'app_hello_hello'/* app + nom du comtroleur + nom de la fonction */, methods:['GET'] /*les methodes autorisés */)]
-    public function hello(Request $request, string $nom): Response {
+    #[Route("/hello/{nom}"/* {paramètre dynamique} */, name: 'app_hello_hello'/* app + nom du comtroleur + nom de la fonction */, methods: ['GET'] /*les methodes autorisés */)]
+    public function hello(Request $request, string $nom): Response
+    {
 
         //Création d'un objet response correspodant au fichier text de la réponse
         $response = new Response("Hello $nom :)");
@@ -46,7 +47,9 @@ class HelloController extends AbstractController
         //Affiche la méthode HTTP que le client utilise
         $request->getMethod(); //GET
 
-
-        return $response;
+        // pour ecrire sur une page html
+        return $this->render('hello/hello.html.twig', [
+            'nom' => $nom
+        ]);
     }
 }

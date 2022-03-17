@@ -8,26 +8,36 @@ use App\Entity\Book;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BookController extends AbstractController
 {
     #[Route('/book/new')]
-    public function new(EntityManagerInterface $manager): Response
+    public function new(Request $request, EntityManagerInterface $manager): Response
     {
+        if ($request->isMethod('GET')) {
+            return $this->render('book/new.html.twig'); //envoie sur la vue book
+        }
+
         $book = new Book();
 
-        $book->setTitle('Pire livre!! ');
-        $book->setPrice(0.2);
-        $book->setDescription('à supprimer!!!!');
+        $title = $request->request->get('title'); //recup le formualaire de la vue
+        $price = (float)$request->request->get('price');
+        $desc = $request->request->get('description');
 
-        $manager->persist($book);
+        $book->setTitle($title);
+        $book->setPrice($price);
+        $book->setDescription($desc);
+
+        $manager->persist($book); //envoie le livre sur la bdd
         $manager->flush();
 
-        return new Response("Le livre : " . $book->getTitle() . 'à l\'id : ' . $book->getId() . ' est en ligne');
+        return $this->redirectToRoute('app_book_livres'); //renvoie sur la liste des livres après avoir ajouter le nouveau
     }
-    #[Route('/livres')]
+    #[Route('/livres', name: 'app_book_livres')]
     public function list(BookRepository $repository): Response
     {
         $books = $repository->findAll(); // tableau des livres

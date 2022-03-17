@@ -22,6 +22,6 @@ get http://127.0.0.1:8000/livres/4
 
 ###
 
-get http://127.0.0.1:8000/livres/4/suppr
+get http://127.0.0.1:8000/livres/5/suppr
 
 
