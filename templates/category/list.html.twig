@@ -1,12 +1,15 @@
 {% extends "base/librairie.html.twig" %}
 
 {% block content %}
-	<ul>
+<ul class="list-group list-group-horizontal">
 		{% for category in categorys %}
-		<li> {{category.name}}
-		<a href="{{path('app_category_update',{'id':category.id})}}"> Lien vers modifier</a>
-		<a href="{{path('app_category_remove',{'id':category.id})}}"> Lien vers supprimer</a></li>
+		<ul class="list-group-sm">
+		<li class="list-group-item"> {{category.name}} </li>
+		<li class="list-group-item"> <a href="{{path('app_category_update',{'id':category.id})}}"> Lien vers modifier</a> </li>
+		<li class="list-group-item"> <a href="{{path('app_category_remove',{'id':category.id})}}"> Lien vers supprimer</a></li>
+		</ul>
+		<br>
 		{% endfor %}
-	</ul>
+
 
 {% endblock %}

@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BookController extends AbstractController
 {
-    #[Route('/book/new')]
+    #[Route('/book/new' , name: 'app_book_new')]
     public function new(Request $request, EntityManagerInterface $manager): Response
     {
         if ($request->isMethod('GET')) {

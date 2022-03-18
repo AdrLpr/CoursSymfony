@@ -9,17 +9,17 @@
 	</h2>
 
 	<form method="POST">
-		<div>
-			<input name="title" type="text" placeholder=" {{titre}} ">
+		<div class='input-group mb-3'>
+			<input class='form-control' name="title" type="text" placeholder=" {{titre}} ">
+		</div>
+		<div class='input-group mb-3'>
+			<input class='form-control' name="price" type="number" step="0.01" placeholder="{{price}}">
+		</div>
+		<div class='input-group mb-3'>
+			<textarea class='form-control' name="description" placeholder="{{desc}}"></textarea>
 		</div>
 		<div>
-			<input name="price" type="number" step="0.01" placeholder="{{price}}">
-		</div>
-		<div>
-			<textarea name="description" placeholder="{{desc}}"></textarea>
-		</div>
-		<div>
-			<button type="submit">Sauvegarde le livre</button>
+			<button class="btn btn-primary" type="submit">Sauvegarde le livre</button>
 		</div>
 	</form>
 {% endblock %}

@@ -1,12 +1,15 @@
 {% extends "base/librairie.html.twig" %}
 
 {% block content %}
-	<ul>
+	<ul class="list-group list-group-horizontal">
 		{% for book in books %}
-		<li> {{book.title}}
-		<a href="{{path('app_book_update',{'id':book.id})}}"> Lien vers modifier</a>
-		<a href="{{path('app_book_remove',{'id':book.id})}}"> Lien vers supprimer</a></li>
+		<ul class="list-group">
+		<li class="list-group-item"> {{book.title}} </li>
+		<li class="list-group-item"> <a href="{{path('app_book_update',{'id':book.id})}}"> Lien vers modifier</a></li>
+		<li class="list-group-item"> <a href="{{path('app_book_remove',{'id':book.id})}}"> Lien vers supprimer</a></li>
+		</ul>
+		<br>
 		{% endfor %}
-	</ul>
+	
 
 {% endblock %}

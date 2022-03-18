@@ -2,24 +2,24 @@
 
 {% block content %}
 	<h2>
-		Vous allez modifier le livre à l'id :
+		Vous allez modifier l'auteur à l'id :
 		{{id}}
 		// Son nom est :
 		{{name}}
 	</h2>
 
 	<form method="POST">
-		<div>
-			<input name="name" type="text" placeholder="{{name}}">
+		<div class='input-group mb-3'>
+			<input class='form-control' name="name" type="text" placeholder="{{name}}">
+		</div>
+		<div class='input-group mb-3'>
+			<input class='form-control' name="image" type="text" placeholder="lien vers la photo de l'auteur">
+		</div>
+		<div class='input-group mb-3'>
+			<textarea  class='form-control' name="description" placeholder="{{desc}}"></textarea>
 		</div>
 		<div>
-			<input name="image" type="text" placeholder="lien vers la photo de l'auteur">
-		</div>
-		<div>
-			<textarea name="description" placeholder="{{desc}}"></textarea>
-		</div>
-		<div>
-			<button type="submit">Sauvegarde l'auteur</button>
+			<button class="btn btn-primary" type="submit">Sauvegarde l'auteur</button>
 		</div>
 	</form>
 {% endblock %}

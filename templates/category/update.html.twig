@@ -4,15 +4,15 @@
 	<h2>
 		Vous allez modifier la catégorie à l'id :
 		{{id}}
-		// Son nom est :
+		// Son nom est : 
 		{{name}}
 	</h2>
 
 	<form method="POST">
+		<div class='input-group mb-3'>
+			<input class='form-control' name="name" type="text" placeholder="{{name}}">
 		<div>
-			<input name="name" type="text" placeholder="{{name}}">
-		<div>
-			<button type="submit">Sauvegarde l'auteur</button>
+			<button class="btn btn-primary" type="submit">Sauvegarde l'auteur</button>
 		</div>
 	</form>
 {% endblock %}

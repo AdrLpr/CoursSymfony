@@ -1,12 +1,16 @@
 {% extends "base/librairie.html.twig" %}
 
 {% block content %}
-	<ul>
+<ul class="list-group list-group-horizontal">
 		{% for author in authors %}
-		<li> {{author.name}} <img src="{{author.image}}" width="100px"> 
-		<a href="{{path('app_author_update',{'id':author.id})}}"> Lien vers modifier</a>
-		<a href="{{path('app_author_remove',{'id':author.id})}}"> Lien vers supprimer</a></li>
+		<ul class="list-group-sm">
+		<li class="list-group-item flex-fill"> {{author.name}} </li> <li class="list-group-item"> <img src="{{author.image}}" width="25%"> </li>
+		<li class="list-group-item flex-fill"> <a href="{{path('app_author_update',{'id':author.id})}}"> Lien vers modifier</a> </li>
+		<li class="list-group-item flex-fill"> <a href="{{path('app_author_remove',{'id':author.id})}}"> Lien vers supprimer</a> </li>
+		</ul>
+		
+		<br>
 		{% endfor %}
-	</ul>
+	
 
 {% endblock %}
