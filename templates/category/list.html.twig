@@ -1,11 +1,11 @@
-{% extends "category/base.html.twig" %}
+{% extends "base/librairie.html.twig" %}
 
-{% block body %}
+{% block content %}
 	<ul>
 		{% for category in categorys %}
-		<li> {{book.title}}
-		<a href="{{path('app_book_update',{'id':book.id})}}"> Lien vers modifier</a>
-		<a href="{{path('app_book_remove',{'id':book.id})}}"> Lien vers supprimer</a></li>
+		<li> {{category.name}}
+		<a href="{{path('app_category_update',{'id':category.id})}}"> Lien vers modifier</a>
+		<a href="{{path('app_category_remove',{'id':category.id})}}"> Lien vers supprimer</a></li>
 		{% endfor %}
 	</ul>
 

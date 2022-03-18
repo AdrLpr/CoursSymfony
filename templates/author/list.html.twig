@@ -1,6 +1,6 @@
-{% extends "author/base.html.twig" %}
+{% extends "base/librairie.html.twig" %}
 
-{% block body %}
+{% block content %}
 	<ul>
 		{% for author in authors %}
 		<li> {{author.name}} <img src="{{author.image}}" width="100px"> 

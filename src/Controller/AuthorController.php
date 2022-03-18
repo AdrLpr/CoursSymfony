@@ -52,7 +52,7 @@ class AuthorController extends AbstractController
     {
         $author = $repository->find($id);
         if ($author != null) {
-            $reponse = new Response("le livre à l'id $id : " . $author->getName() . "a été supprimer");
+            $reponse = new Response("l'auteur à l'id:  $id : " . $author->getName() . " a été supprimer");
             $manager->remove($author);
             $manager->flush();
             return $reponse;

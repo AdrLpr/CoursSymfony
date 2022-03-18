@@ -1,19 +1,12 @@
-{% extends "author/base.html.twig" %}
+{% extends "base/librairie.html.twig" %}
 
 
-{% block body %}
+{% block content %}
 	<form method="POST">
 		<div>
-			<input name="name" type="text" placeholder="nom de l'auteur...">
+			<input name="name" type="text" placeholder="nom de la catégorie">
 		</div>
-		<div>
-			<input name="image" type="text" placeholder="lien vers la photo de l'auteur..">
-		</div>
-		<div>
-			<textarea name="description" placeholder="description de l'auteur..."></textarea>
-		</div>
-		<div>
-			<button type="submit">Sauvegarde l'auteur</button>
+			<button type="submit">Sauvegarde la catégorie</button>
 		</div>
 	</form>
 {% endblock %}

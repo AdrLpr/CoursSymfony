@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h2>
-		Vous allez modifier le livre à l'id :
+		Vous allez modifier la catégorie à l'id :
 		{{id}}
 		// Son nom est :
 		{{name}}
@@ -11,13 +11,6 @@
 	<form method="POST">
 		<div>
 			<input name="name" type="text" placeholder="{{name}}">
-		</div>
-		<div>
-			<input name="image" type="text" placeholder="lien vers la photo de l'auteur">
-		</div>
-		<div>
-			<textarea name="description" placeholder="{{desc}}"></textarea>
-		</div>
 		<div>
 			<button type="submit">Sauvegarde l'auteur</button>
 		</div>
