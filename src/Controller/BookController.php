@@ -51,10 +51,12 @@ class BookController extends AbstractController
         // }
 
         foreach ($books as $book) {
-            $list .= "<p>" . $book->getTitle() . " / id: " . $book->getId() . " </p>";
+            $list .= $book->getTitle() . " / id: " . $book->getId() . "/ prix: " . $book->getPrice() . "  ||  ";
         }
 
-        return new Response("$list");
+        return $this->render('book/list.html.twig', [
+            'books'=>$books
+        ]);
     }
 
     #[Route('livres/{id}')]
@@ -70,7 +72,7 @@ class BookController extends AbstractController
         }
     }
 
-    #[Route('livres/{id}/suppr')]
+    #[Route('livres/{id}/suppr' , name: 'app_book_remove')]
     public function remove(int $id, BookRepository $repository, EntityManagerInterface $manager): Response
     {
         $book = $repository->find($id);
@@ -84,5 +86,33 @@ class BookController extends AbstractController
             $error->setStatusCode(404);
             return $error;
         }
+    }
+
+    #[Route('livres/{id}/modifier' , name: 'app_book_update')]
+    public function update(Request $request, int $id, BookRepository $repository, EntityManagerInterface $manager): Response
+    {
+        $book = $repository->find($id);
+        $title = $book->getTitle();
+        $price = $book->getPrice();
+        $desc = $book->getDescription();
+
+        if ($request->isMethod('GET')) {
+            return $this->render('book/update.html.twig', [
+                'titre' => $title, 'price' => $price, 'desc' => $desc, 'id' => $id
+            ]);
+        }
+
+        $newTitle = $request->request->get('title'); //recup le formualaire de la vue
+        $newPrice = (float)$request->request->get('price');
+        $newDesc = $request->request->get('description');
+
+        $book->setTitle($newTitle);
+        $book->setPrice($newPrice);
+        $book->setDescription($newDesc);
+
+        $manager->persist($book); //met à jour le livre sur la bdd
+        $manager->flush();
+
+        return $this->redirectToRoute('app_book_livres'); //renvoie sur la liste des livres après avoir modifier le nouveau
     }
 }

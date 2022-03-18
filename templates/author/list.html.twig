@@ -1,0 +1,12 @@
+{% extends "author/base.html.twig" %}
+
+{% block body %}
+	<ul>
+		{% for author in authors %}
+		<li> {{author.name}} <img src="{{author.image}}" width="100px"> 
+		<a href="{{path('app_author_update',{'id':author.id})}}"> Lien vers modifier</a>
+		<a href="{{path('app_author_remove',{'id':author.id})}}"> Lien vers supprimer</a></li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}

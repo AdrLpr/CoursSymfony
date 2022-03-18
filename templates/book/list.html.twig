@@ -1,0 +1,12 @@
+{% extends "book/base.html.twig" %}
+
+{% block body %}
+	<ul>
+		{% for book in books %}
+		<li> {{book.title}}
+		<a href="{{path('app_book_update',{'id':book.id})}}"> Lien vers modifier</a>
+		<a href="{{path('app_book_remove',{'id':book.id})}}"> Lien vers supprimer</a></li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}
