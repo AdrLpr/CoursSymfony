@@ -55,7 +55,7 @@ class CategoryAdminController extends AbstractController
 
         if (!$category)
         {
-            return new Response("Cet auteur n'existe pas", 404);
+            return new Response("Cette categorie n'existe pas", 404);
         }
 
         if ($request->isMethod('GET'))
@@ -74,14 +74,14 @@ class CategoryAdminController extends AbstractController
         return $this->redirectToRoute('app_admin_categoryAdmin_retrieve');
     }
 
-    #[Route('admin/auteurs/{id}/supprimer', name:'app_admin_categoryAdmin_delete')]
+    #[Route('admin/categories/{id}/supprimer', name:'app_admin_categoryAdmin_delete')]
     public function delete(int $id,CategoryRepository $repository,EntityManagerInterface $manager, Request $request): Response
     {
         $category=$repository->find($id);
 
         if (!$category)
         {
-            return new Response("Cet auteur n'existe pas", 404);
+            return new Response("Cette categorie n'existe pas", 404);
         }
 
         $manager->remove($category);
