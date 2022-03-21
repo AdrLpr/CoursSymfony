@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookAdminController extends AbstractController
 
 {
-    #[Route('/admin/livre/new' , name:'app_admin_bookAdmin_create')]
+    #[Route('/admin/livres/new' , name:'app_admin_bookAdmin_create')]
     public function create(EntityManagerInterface $manager, Request $request) : Response
     {
         //si la methode est GET (obtenir)
