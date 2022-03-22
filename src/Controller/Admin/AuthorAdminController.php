@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Author;
+use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,20 +18,22 @@ class AuthorAdminController extends AbstractController
     #[Route('admin/auteurs/new', name:'app_admin_authorAdmin_create')]
     public function create(EntityManagerInterface $manager, Request $request): Response
     {
-        if($request->isMethod('GET'))
-        {
-            return $this->render('admin/authorAdmin/create.html.twig');
+        $author = new Author();
+        $form = $this->createForm(AuthorType::class, $author);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($form->getData());
+            $manager->flush();
+            return $this->redirectToRoute('app_admin_authorAdmin_retrieve');
         }
+        
+        $formView= $form->createView();
 
-        $author = (new Author())
-        ->setName($request->request->get('name'))
-        ->setDescription($request->request->get('description'))
-        ->setPictures($request->request->get('pictures'));
-
-        $manager->persist($author);
-        $manager->flush();
-
-        return $this->redirectToRoute('app_admin_authorAdmin_retrieve');
+        return $this->render('admin/authorAdmin/create.html.twig',[
+            'formView'=>$formView
+        ]);
     }
 
     #[Route('admin/auteurs', name:'app_admin_authorAdmin_retrieve')]
@@ -53,22 +56,21 @@ class AuthorAdminController extends AbstractController
             return new Response("Cet auteur n'existe pas", 404);
         }
 
-        if ($request->isMethod('GET'))
-        {
-            return $this->render('admin/authorAdmin/update.html.twig',[
-                'author'=>$author
-            ]);
+        $form = $this->createForm(AuthorType::class, $author);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($form->getData());
+            $manager->flush();
+
+            return $this->redirectToRoute('app_admin_authorAdmin_retrieve');
         }
+        $formView = $form->createView();
 
-        $author
-        ->setName($request->request->get('name'))
-        ->setDescription($request->request->get('description'))
-        ->setPictures($request->request->get('pictures'));
-
-        $manager->persist($author);
-        $manager->flush();
-
-        return $this->redirectToRoute('app_admin_authorAdmin_retrieve');
+        return $this->render('admin/authorAdmin/update.html.twig', [
+            'formView' => $formView,
+        ]);
     }
     
     #[Route('admin/auteurs/{id}/supprimer', name:'app_admin_authorAdmin_delete')]

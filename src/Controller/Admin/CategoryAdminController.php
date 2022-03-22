@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,25 +18,26 @@ class CategoryAdminController extends AbstractController
     #[Route('/admin/categories/new' , name:'app_admin_categoryAdmin_create')]
     public function create(EntityManagerInterface $manager, Request $request) : Response
     {
-        //si la methode est GET (obtenir)
-        if ($request->isMethod('GET'))
-        {
-            //afficher la page
-            return $this->render('admin/categoryAdmin/create.html.twig');
-        }
-        //si la methode est POST (créer)
-        
         //creation du livre
-        $category = (new Category())
-        ->setName($request->request->get('name'));
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
         //enregisterment, persistance du livre
         $manager->persist($category);
-
         $manager->flush();
-
         //redirige vers la liste des livres
         return $this->redirectToRoute('app_admin_categoryAdmin_retrieve');
+        }
+
+        $formView= $form->createView();
+
+        return $this->render('admin/categoryAdmin/create.html.twig',[
+            'formView'=>$formView
+        ]);
+        
     }
 
     #[Route('admin/categories', name:'app_admin_categoryAdmin_retrieve')]
@@ -57,21 +59,20 @@ class CategoryAdminController extends AbstractController
         {
             return new Response("Cette categorie n'existe pas", 404);
         }
+        $form = $this->createForm(CategoryType::class, $category);
 
-        if ($request->isMethod('GET'))
-        {
-            return $this->render('admin/categoryAdmin/update.html.twig',[
-                'category'=>$category
-            ]);
-        }
+        $form->handleRequest($request);
 
-        $category
-        ->setName($request->request->get('name'));
-
+        if ($form->isSubmitted() && $form->isValid()) {
         $manager->persist($category);
         $manager->flush();
-
         return $this->redirectToRoute('app_admin_categoryAdmin_retrieve');
+        }
+        $formView = $form->createView();
+
+        return $this->render('admin/categoryAdmin/update.html.twig', [
+            'formView' => $formView,
+        ]);
     }
 
     #[Route('admin/categories/{id}/supprimer', name:'app_admin_categoryAdmin_delete')]
