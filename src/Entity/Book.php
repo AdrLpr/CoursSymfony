@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
@@ -24,6 +25,10 @@ class Book
 
     #[ORM\Column(type: 'float')]
     private $price;
+
+
+    #[ORM\ManyToOne(targetEntity: Author::class, inversedBy: 'books')]
+    private $Author;
 
     public function getId(): ?int
     {
@@ -77,4 +82,17 @@ class Book
 
         return $this;
     }
+
+    public function getAuthor(): ?Author
+    {
+        return $this->Author;
+    }
+
+    public function setAuthor(?Author $Author): self
+    {
+        $this->Author = $Author;
+
+        return $this;
+    }
+
 }
