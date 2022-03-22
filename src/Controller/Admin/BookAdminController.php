@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Book;
+use App\Form\BookType;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,28 +19,25 @@ class BookAdminController extends AbstractController
     #[Route('/admin/livres/new' , name:'app_admin_bookAdmin_create')]
     public function create(EntityManagerInterface $manager, Request $request) : Response
     {
-        //si la methode est GET (obtenir)
-        if ($request->isMethod('GET'))
-        {
-            //afficher la page
-            return $this->render('admin/bookAdmin/create.html.twig');
-        }
-        //si la methode est POST (créer)
         
         //creation du livre
-        $book = (new Book())
-        ->setTitle($request->request->get('title'))
-        ->setDescription($request->request->get('description'))
-        ->setPrice((float)$request->request->get('price'))
-        ->setPictures($request->request->get('pictures'));
+        $book = new Book();
+        $form = $this->createForm(BookType::class, $book);
 
-        //enregisterment, persistance du livre
-        $manager->persist($book);
+        $form->handleRequest($request);
 
-        $manager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($form->getData());
+            $manager->flush();
 
-        //redirige vers la liste des livres
-        return $this->redirectToRoute('app_admin_bookAdmin_retrieve');
+            return $this->redirectToRoute('app_admin_bookAdmin_retrieve');
+        }
+
+        $formView = $form->createView();
+
+        return $this->render('admin/bookAdmin/create.html.twig',[
+            'formView'=>$formView
+        ]);
     }
     
     #[Route('admin/livres', name:'app_admin_bookAdmin_retrieve')]
@@ -66,27 +64,21 @@ class BookAdminController extends AbstractController
         }
 
         //si la methode est GET (obtenir)
-        if ($request->isMethod('GET'))
-        {
-            //afficher la page
-            return $this->render('admin/bookAdmin/update.html.twig', 
-            ['book' => $book
-        ]);
+        $form = $this->createForm(BookType::class, $book);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($form->getData());
+            $manager->flush();
+
+            return $this->redirectToRoute('app_admin_bookAdmin_retrieve');
         }
+        $formView = $form->createView();
 
-        $book
-        ->setTitle($request->request->get('title'))
-        ->setDescription($request->request->get('description'))
-        ->setPrice((float)$request->request->get('price'))
-        ->setPictures($request->request->get('pictures'));
-
-        //enregisterment, persistance du livre
-        $manager->persist($book);
-
-        $manager->flush();
-
-        //redirige vers la liste des livres
-        return $this->redirectToRoute('app_admin_bookAdmin_retrieve');
+        return $this->render('admin/bookAdmin/update.html.twig', [
+            'formView' => $formView,
+        ]);
     
     }
 
