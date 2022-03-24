@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h2> Les 5 derniers livres ajoutés </h2>
+<table style='border:black 2px solid' >
+    <thead>
+        <tr>
+            <th> ID </th>
+            <th> Titre </th>
+            <th> Prix </th>
+            <th> Auteur </th>
+        </tr>
+    </thead>
+    <tbody>
+{% for book in lastFive %}
+    <tr>
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.price }} €</td>
+        <td>{{ book.author.name }}</td>
+{% endfor %}
+{% endblock %}

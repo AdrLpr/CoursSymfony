@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Book;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,6 +18,7 @@ class CategoryType extends AbstractType
         ->add('name', TextType::class, [
             'label'=>'Nom'
         ] )
+
         ->add('submit', SubmitType::class , [
             'label'=>'Envoyer'
         ])

@@ -99,5 +99,6 @@ class BookAdminController extends AbstractController
         //redirige vers la liste des livres
         return $this->redirectToRoute('app_admin_bookAdmin_retrieve');
     }
+
 }
 

@@ -43,21 +43,13 @@ class BookType extends AbstractType
                 // si true alors des checkboxes (ou radio box) seront utilisé
                 'expanded' => false,
             ])
-            // ->add('category', EntityType::class, [
-            //     'label' => 'Categorie du livre :',
-            //     // Specifier la class qui correspond à la catégorie
-            //     'class' => Category::class,
-            //     // Specifier la propriété dans la class catégorie
-            //     // qui sera affiché à l'écran
-            //     'choice_label' => 'name',
-            //     // Définie si l'on peut séléctioner plusieurs catégorie
-            //     // ou non
-            //     'multiple' => true,
-            //     // Définie le "widget" utilisé pour l'affichage:
-            //     // si false alors une select box sera utilisé
-            //     // si true alors des checkboxes (ou radio box) seront utilisé
-            //     'expanded' => true,
-            // ])
+            ->add('categories', EntityType::class, [
+                'label' => 'Catégories du livre :',
+                'class' => Category::class,
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+            ])
             ->add('price', MoneyType::class, [
                 'label'=>'Prix'
             ])
