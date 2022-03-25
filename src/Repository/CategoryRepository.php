@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\SearchCategory;
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -43,6 +44,24 @@ class CategoryRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    public function findAllFilteredBy(SearchCategory $searchCategory): array
+    {
+        $queryBuilder = $this->createQueryBuilder('categories');
+
+        $queryBuilder->setMaxResults($searchCategory->limit);
+        $queryBuilder->setFirstResult($searchCategory->limit * ($searchCategory->page - 1));
+        $queryBuilder->orderBy('categories.' . $searchCategory->sortBy, $searchCategory->direction);
+
+        if ($searchCategory->name) {
+            $queryBuilder->andWhere('categories.name LIKE :name');
+            $queryBuilder->setParameter('name', "%{$searchCategory->name}%");
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

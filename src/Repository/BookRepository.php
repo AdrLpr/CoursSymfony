@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\DTO\SearchBook;
+use App\DTO\SearchBookAdmin;
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -193,6 +194,38 @@ class BookRepository extends ServiceEntityRepository
             $queryBuilder->andWhere($queryBuilder->expr()->in('category.id', $searchBook->categories->map(function ($category) {
                 return $category->getId();
             })));
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllFilteredAdminBy(SearchBookAdmin $searchBookAdmin): array
+    {
+        $queryBuilder = $this->createQueryBuilder('book');
+
+        $queryBuilder->setMaxResults($searchBookAdmin->limit);
+        $queryBuilder->setFirstResult($searchBookAdmin->limit * ($searchBookAdmin->page - 1));
+        $queryBuilder->orderBy('book.' . $searchBookAdmin->sortBy, $searchBookAdmin->direction);
+
+        if ($searchBookAdmin->title) {
+            $queryBuilder->andWhere('book.title LIKE :title');
+            $queryBuilder->setParameter('title', "%{$searchBookAdmin->title}%");
+        }
+
+        if ($searchBookAdmin->authorName) {
+            $queryBuilder->leftJoin('book.author', 'author');
+            $queryBuilder->andWhere('author.name LIKE :authorName');
+            $queryBuilder->setParameter('authorName', "%{$searchBookAdmin->authorName}%");
+        }
+
+        if ($searchBookAdmin->prixMin || $searchBookAdmin->prixMax) {
+            $queryBuilder->andWhere('book.price <= :max');
+            $queryBuilder->setParameter('max', $searchBookAdmin->prixMax);
+            $queryBuilder->andWhere('book.price >= :min');
+            $queryBuilder->setParameter('min', $searchBookAdmin->prixMin);
+            
         }
 
         return $queryBuilder

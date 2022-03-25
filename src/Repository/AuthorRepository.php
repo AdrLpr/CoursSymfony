@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\SearchAuthor;
 use App\Entity\Author;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -45,6 +46,24 @@ class AuthorRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findAllFilteredBy(SearchAuthor $searchAuthor): array
+    {
+        $queryBuilder = $this->createQueryBuilder('authors');
+
+        $queryBuilder->setMaxResults($searchAuthor->limit);
+        $queryBuilder->setFirstResult($searchAuthor->limit * ($searchAuthor->page - 1));
+        $queryBuilder->orderBy('authors.' . $searchAuthor->sortBy, $searchAuthor->direction);
+
+        if ($searchAuthor->name) {
+            $queryBuilder->andWhere('authors.name LIKE :name');
+            $queryBuilder->setParameter('name', "%{$searchAuthor->name}%");
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Author[] Returns an array of Author objects
     //  */

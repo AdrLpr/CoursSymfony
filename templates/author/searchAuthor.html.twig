@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  {{ form(formView) }}
+
+  {% for author in authors %}
+    <p>{{ author.name }}</p>
+  {% endfor %}
+{% endblock %}
