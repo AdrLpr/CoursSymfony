@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\DTO\Admin\AdminBookSearch;
+use App\DTO\BookSearch;
+use App\Entity\Author;
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -119,5 +121,64 @@ class BookRepository extends ServiceEntityRepository
         return $queryBuilder
             ->getQuery()
             ->getResult();
+    }
+
+    
+    public function findBySearch(BookSearch $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('book');
+        $queryBuilder->setMaxResults($search->limit);
+        $queryBuilder->setFirstResult($search->limit * ($search->page - 1));
+        $queryBuilder->orderBy("book.{$search->sortBy}", $search->direction);
+
+        if ($search->title !== null) {
+            $queryBuilder->andWhere('book.title LIKE :title');
+            $queryBuilder->setParameter('title', "%{$search->title}%");
+        }
+
+        if ($search->authorName !== null) {
+            $queryBuilder->leftJoin('book.author', 'author');
+            $queryBuilder->andWhere('author.name LIKE :authorName');
+            $queryBuilder->setParameter('authorName', "%{$search->authorName}%");
+        }
+
+        if ($search->categoryName !== null) {
+            $queryBuilder->leftJoin('book.categories', 'category');
+            $queryBuilder->andWhere('category.name LIKE :categoryName');
+            $queryBuilder->setParameter('categoryName', "%{$search->categoryName}%");
+        }
+
+        if ($search->authorId !== null) {
+            $queryBuilder->leftJoin('book.author', 'author');
+            $queryBuilder->andWhere('author.id = :authorId');
+            $queryBuilder->setParameter('authorId', $search->authorId);
+        }
+
+        if ($search->minPrice !== null) {
+            $queryBuilder->andWhere('book.price >= :minPrice');
+            $queryBuilder->setParameter('minPrice', $search->minPrice);
+        }
+
+        if ($search->maxPrice !== null) {
+            $queryBuilder->andWhere('book.price <= :maxPrice');
+            $queryBuilder->setParameter('maxPrice', $search->maxPrice);
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findTenLast(): array
+    {
+        return $this->findBySearch(new BookSearch());
+    }
+
+    public function findTenLastForAuthor(Author $author): array
+    {
+        $search = new BookSearch();
+        $search->authorId = $author->getId();
+
+        return $this->findBySearch($search);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\DTO\Admin\AdminAuthorSearch;
+use App\DTO\AuthorSearch;
 use App\Entity\Author;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -61,5 +62,29 @@ class AuthorRepository extends ServiceEntityRepository
         return $queryBuilder
             ->getQuery()
             ->getResult();
+    }
+    public function findBySearch(AuthorSearch $search): array
+    {
+        $queryBuilder = $this->createQueryBuilder('author');
+        $queryBuilder->setMaxResults($search->limit);
+        $queryBuilder->setFirstResult($search->limit * ($search->page - 1));
+        $queryBuilder->orderBy("author.{$search->sortBy}", $search->direction);
+
+        if ($search->name !== null) {
+            $queryBuilder->andWhere('author.name LIKE :name');
+            $queryBuilder->setParameter('name', "%{$search->name}%");
+        }
+
+        return $queryBuilder
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findFiveLast(): array
+    {
+        $search = new AuthorSearch();
+        $search->limit = 5;
+
+        return $this->findBySearch($search);
     }
 }
