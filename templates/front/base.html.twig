@@ -24,11 +24,22 @@
       <a href="{{ path('app_front_book_search') }}">
         <i class="fa-solid fa-magnifying-glass"></i>
       </a>
+      {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_admin_bookAdmin_retrieve') }}">
+          Admin
+        </a>
+      {% endif %}
     </nav>
 	</header>
 
   <div class="container">
     <h1>
+    {% if app.user %}
+      <p>{{ app.user.email }}</p>
+      <p>Vous êtes connécté</p>
+    {% else %}
+      <p>Vous n'êtes pas connécté</p>
+    {% endif %}
       {% block page_title %}{% endblock %}
     </h1>
 

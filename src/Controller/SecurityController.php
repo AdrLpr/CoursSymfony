@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfilType;
 use App\Form\SignInType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +39,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/inscription', name: 'app_inscription')]
-    public function signIn(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $manager ,Request $request)
+    public function signIn(UserRepository $repository ,UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $manager ,Request $request)
     {
         $form = $this->createForm(SignInType::class);
 
@@ -44,7 +47,7 @@ class SecurityController extends AbstractController
         
         if($form->isSubmitted() && $form->isValid())
         {
-            $user = new User($form->getData());
+            $user = $form->getData();
             $plainpassword= $user->getPassword();
             
             $hassedpassword = $passwordHasher->hashPassword(
@@ -54,14 +57,44 @@ class SecurityController extends AbstractController
 
             $user->setPassword($hassedpassword);
 
-            $manager->persist($user);
-            $manager->flush();
+            $repository->add($user);
 
             return $this->redirectToRoute('app_login');
         }
         $formView = $form->createView();
         return $this->render('security/signIn.html.twig', [
             'formView' => $formView,
+        ]);
+    }
+    #[IsGranted('ROLE_USER')]
+    #[Route(path: '/mon-profil', name:'app_profil')]
+    public function profil(UserRepository $repository,UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $manager ,Request $request ) : Response
+    {    
+
+        $form = $this->createForm(ProfilType::class, $this->getUser() );
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $user = $form->getData();
+            $plainpassword= $user->getPassword();
+            
+            $hassedpassword = $passwordHasher->hashPassword(
+                $user,
+                $plainpassword
+            );
+
+            $user->setPassword($hassedpassword);
+
+            $repository->add($user);
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        $formView = $form->createView();
+        return $this->render('security/profile.html.twig', [
+            'formView' => $formView
         ]);
     }
 }

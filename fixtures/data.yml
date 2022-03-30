@@ -45,3 +45,7 @@ App\Entity\User:
     email: "moi@gmail.com"
     roles: ["ROLE_USER"]
     password: \$2y\$13\$/t.RVTdbgfLNCBxTvtbSX.ccHTxGLr0XYo6gNLbGz4M6Ysk/B8azm
+  user2:
+    email: "admin@gmail.com"
+    roles: ["ROLE_ADMIN"]
+    password: \$2y\$13\$/t.RVTdbgfLNCBxTvtbSX.ccHTxGLr0XYo6gNLbGz4M6Ysk/B8azm
