@@ -38,7 +38,7 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route(path: '/inscription', name: 'app_inscription')]
+    #[Route(path: '/inscription', name: 'app_security_signIn')]
     public function signIn(UserRepository $repository ,UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $manager ,Request $request)
     {
         $form = $this->createForm(SignInType::class);
@@ -67,7 +67,7 @@ class SecurityController extends AbstractController
         ]);
     }
     #[IsGranted('ROLE_USER')]
-    #[Route(path: '/mon-profil', name:'app_profil')]
+    #[Route(path: '/mon-profil', name:'app_security_profil')]
     public function profil(UserRepository $repository,UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $manager ,Request $request ) : Response
     {    
 
